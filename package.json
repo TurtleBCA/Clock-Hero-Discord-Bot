@@ -2,7 +2,7 @@
   "name": "clockhero-discord-bot",
   "version": "1.0.0",
   "description": "A Discord bot that makes sure you stay productive",
-  "main": "main.ts",
+  "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/TurtleBCA/ClockHero-Discord-Bot#readme",
   "dependencies": {
-    "discord.js": "^12.5.3"
+    "discord.js": "^12.5.3",
+    "dotenv": "^8.2.0"
   }
 }
