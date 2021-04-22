@@ -6,7 +6,7 @@ const client = new Discord.Client();
 const prefix = '!';
 const fs = require('fs');
 
-client.commands = new Discord.Collection()
+client.commands = new Discord.Collection();
 const commandFiles = fs.readdirSync('./commands/').filter(file => file.endsWith('.js'));
 const commandSet = new Set()
 for (const file of commandFiles) {
@@ -15,14 +15,24 @@ for (const file of commandFiles) {
     commandSet.add(command.name);
 }
 
+let heroes = {};
+try {
+    heroes = JSON.parse(fs.readFileSync('heroes.json', 'utf8'));
+} catch(err) {
+    fs.writeFileSync('heroes.json', '{}');
+}
+
 client.on('message', message => {
     if (!message.content.startsWith(prefix) || message.author.bot) return;
 
     const args = message.content.slice(prefix.length).split(/ +/);
-    const command = args.shift().toLowerCase();
+    for (let i = 0; i < args.length; i++) {
+        args[i].toLowerCase();
+    }
+    const command = args.shift();
 
     if (commandSet.has(command)) {
-        client.commands.get(command).execute(message, args);
+        client.commands.get(command).execute(message, args, heroes);
     }
 });
 
