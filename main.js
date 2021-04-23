@@ -29,8 +29,19 @@ try {
     fs.writeFileSync('clock.json', '{}');
 }
 
+let lastDate = new Date().getDate();
+try {
+    lastDate = JSON.parse(fs.readFileSync('lastDate.json', 'utf8'));
+} catch(err) {
+    fs.writeFileSync('heroes.json', `${lastDate}`);
+}
+
 client.on('message', message => {
     if (!message.content.startsWith(prefix) || message.author.bot) return;
+    
+    if (lastDate != new Date().getDate()) {
+        console.log(":o")
+    }
 
     const args = message.content.slice(prefix.length).split(/ +/);
     for (let i = 0; i < args.length; i++) {
@@ -41,8 +52,6 @@ client.on('message', message => {
     if (commandSet.has(command)) {
         client.commands.get(command).execute(message, args, heroes, clock);
     }
-
-    console.log(message.author.toString());
 });
 
 client.login(process.env.BOT_TOKEN);

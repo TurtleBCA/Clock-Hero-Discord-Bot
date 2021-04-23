@@ -12,10 +12,17 @@ module.exports = {
 
         if (subcommand === 'goal') {
             if (args.length == 1) {
-                message.channel.send(`Goal: ${clock[message.author.toString()].goal}`);
+                message.channel.send(`Goal: ${clock[message.author.toString()].goal} minutes`);
             } else if (args.length == 2) {
                 clock[message.author.toString()].goal = args[1];
-                message.channel.send(`Goal has been set to ${clock[message.author.toString()].goal}`);
+                message.channel.send(`Goal has been set to ${clock[message.author.toString()].goal} minutes`);
+            }
+        } else if (subcommand === 'log') {
+            if (args.length == 1) {
+                message.channel.send(`Log: ${clock[message.author.toString()].log} minutes`);
+            } else if (args.length == 2) {
+                clock[message.author.toString()].log = args[1];
+                message.channel.send(`Log has been set to ${clock[message.author.toString()].log} minutes`);
             }
         }
 
