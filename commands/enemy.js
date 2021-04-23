@@ -14,7 +14,6 @@ function damage(attack, defense) {
 
 function lowerBound(lo, hi, method) {
     while (lo < hi) {
-        console.log(lo, hi)
         mid = Math.floor((hi + lo) / 2);
         if (method(mid)) {
             hi = mid;
@@ -76,7 +75,6 @@ module.exports = {
                 for (const hero of Object.values(heroes)) {
                     minHits = Math.min(minHits, health(hero.health) / damage(power(attack), power(hero.defense)));
                 }
-            console.log(minHits);
 
             // optimize health/defense pairing
             let total = healthLvl + attack;
@@ -96,8 +94,10 @@ module.exports = {
                 }
             }
 
-            enemy = {name: "name", description: "desc", image: "", level: total / 3, health: healthLvl, attack: attack, defense: defense};
+            enemy = {name: "name", description: "desc", image: "", currentHP: Math.ceil(health(healthLvl)), level: total / 3, health: healthLvl, attack: attack, defense: defense};
             message.channel.send(JSON.stringify(enemy));
+        } else if (subcommand === 'info') {
+            message.channel.send(`Lv. ${enemy.level} ${enemy.name}: HP ${enemy.currentHP}/${Math.ceil(health(enemy.health))} \\|\\| Stat ${enemy.health}/${enemy.attack}/${enemy.defense}`);
         }
 
         fs.writeFile('enemy.json', JSON.stringify(enemy), (err) => {});

@@ -31,14 +31,14 @@ try {
 
 let lastDate = new Date().getDate();
 try {
-    lastDate = JSON.parse(fs.readFileSync('lastDate.json', 'utf8'));
+    lastDate = parseInt(fs.readFileSync('lastDate.json', 'utf8'));
 } catch(err) {
     fs.writeFileSync('lastDate.json', `${lastDate}`);
 }
 
 let enemy = {};
 try {
-    lastDate = JSON.parse(fs.readFileSync('enemy.json', 'utf8'));
+    enemy = JSON.parse(fs.readFileSync('enemy.json', 'utf8'));
 } catch(err) {
     fs.writeFileSync('enemy.json', '{}');
 }
