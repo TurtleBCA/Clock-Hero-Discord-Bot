@@ -22,6 +22,13 @@ try {
     fs.writeFileSync('heroes.json', '{}');
 }
 
+let clock = {}
+try {
+    clock = JSON.parse(fs.readFileSync('clock.json', 'utf8'));
+} catch(err) {
+    fs.writeFileSync('clock.json', '{}');
+}
+
 client.on('message', message => {
     if (!message.content.startsWith(prefix) || message.author.bot) return;
 
@@ -32,7 +39,7 @@ client.on('message', message => {
     const command = args.shift();
 
     if (commandSet.has(command)) {
-        client.commands.get(command).execute(message, args, heroes);
+        client.commands.get(command).execute(message, args, heroes, clock);
     }
 });
 
