@@ -3,11 +3,12 @@ const fs = require('fs');
 module.exports = {
     name: 'clock',
     description: 'clock related commands',
-    execute(message, args, heroes, clock) {
+    execute(message, args, heroes, clock, enemy) {
         const subcommand = args[0];
 
         if (!(message.author.toString() in clock)) {
             message.channel.send('You must create a character first');
+            return;
         }
 
         if (subcommand === 'goal') {

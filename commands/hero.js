@@ -3,7 +3,7 @@ const fs = require('fs');
 module.exports = {
     name: 'hero',
     description: 'hero related commands',
-    execute(message, args, heroes, clock) {
+    execute(message, args, heroes, clock, enemy) {
         const subcommand = args[0];
         if (subcommand === 'new') {
             if (message.author.toString() in heroes) {
@@ -21,8 +21,8 @@ module.exports = {
         } else if (subcommand === 'info') {
             if (args.length) {
                 const hero = heroes[message.author.toString()];
-                const maxHP = Math.pow(hero.health, Math.log(9981) / Math.log(100)) + 19;
-                let currentExp = hero.totalExp - ((hero.level - 1) * (20 + 20 + hero.level - 2) / 2);
+                const maxHP = Math.ceil(Math.pow(hero.health, Math.log(9981) / Math.log(100)) + 19);
+                let currentExp = hero.totalExp - ((hero.level - 1) * (10 + 10 + hero.level - 2) / 2);
                 message.channel.send(`${hero.name}: HP ${hero.currentHP}/${maxHP} \\|\\| Lv. ${hero.level} ${currentExp}/${20+hero.level-1} \\|\\| Stat ${hero.health}/${hero.attack}/${hero.defense}`);
             }
         }

@@ -33,7 +33,14 @@ let lastDate = new Date().getDate();
 try {
     lastDate = JSON.parse(fs.readFileSync('lastDate.json', 'utf8'));
 } catch(err) {
-    fs.writeFileSync('heroes.json', `${lastDate}`);
+    fs.writeFileSync('lastDate.json', `${lastDate}`);
+}
+
+let enemy = {};
+try {
+    lastDate = JSON.parse(fs.readFileSync('enemy.json', 'utf8'));
+} catch(err) {
+    fs.writeFileSync('enemy.json', '{}');
 }
 
 client.on('message', message => {
@@ -50,7 +57,7 @@ client.on('message', message => {
     const command = args.shift();
 
     if (commandSet.has(command)) {
-        client.commands.get(command).execute(message, args, heroes, clock);
+        client.commands.get(command).execute(message, args, heroes, clock, enemy);
     }
 });
 
