@@ -41,6 +41,8 @@ client.on('message', message => {
     if (commandSet.has(command)) {
         client.commands.get(command).execute(message, args, heroes, clock);
     }
+
+    console.log(message.author.toString());
 });
 
 client.login(process.env.BOT_TOKEN);
