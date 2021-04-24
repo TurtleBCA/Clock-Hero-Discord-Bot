@@ -1,16 +1,5 @@
 const fs = require('fs');
-
-function power(level) {
-    return Math.pow(level, 1.5);
-}
-
-function health(level) {
-    return Math.pow(level, Math.log(9981) / Math.log(100)) + 19;
-}
-
-function damage(attack, defense) {
-    return Math.ceil((attack * attack) / (attack + defense));
-}
+const formulas = require('../formulas.js');
 
 function lowerBound(lo, hi, method) {
     while (lo < hi) {
@@ -27,7 +16,7 @@ function lowerBound(lo, hi, method) {
 function calcMaxCombinedDamage(heroes, defense) {
     let result = 0;
     for (const hero of Object.values(heroes)) {
-        result += 10 * damage(power(hero.attack), power(defense));
+        result += 10 * formulas.damage(formulas.power(hero.attack), formulas.power(defense));
     }
     return result;
 }
@@ -62,18 +51,18 @@ module.exports = {
             }
             // optimize health and attack separately
             let maxCombinedDamage = calcMaxCombinedDamage(heroes, 0);
-            let healthLvl = lowerBound(1, 1000, (level) => {return health(level) / maxCombinedDamage >= parseInt(args[2])});
+            let healthLvl = lowerBound(1, 1000, (level) => {return formulas.health(level) / maxCombinedDamage >= parseInt(args[2])});
             
             let attack = upperBound(1, 1000, (level) => {
                 let minHits = Infinity;
                 for (const hero of Object.values(heroes)) {
-                    minHits = Math.min(minHits, health(hero.health) / damage(power(level), power(hero.defense)));
+                    minHits = Math.min(minHits, formulas.health(hero.health) / formulas.damage(formulas.power(level), formulas.power(hero.defense)));
                 }
                 return minHits >= parseInt(args[1]);
             });
             let minHits = Infinity;
                 for (const hero of Object.values(heroes)) {
-                    minHits = Math.min(minHits, health(hero.health) / damage(power(attack), power(hero.defense)));
+                    minHits = Math.min(minHits, formulas.health(hero.health) / formulas.damage(formulas.power(attack), formulas.power(hero.defense)));
                 }
 
             // optimize health/defense pairing
@@ -81,12 +70,12 @@ module.exports = {
             let defense = 3 - total % 3;
             total = healthLvl + attack + defense;
             while (true) {
-                let currentHits = health(healthLvl) / calcMaxCombinedDamage(heroes, defense);
+                let currentHits = formulas.health(healthLvl) / calcMaxCombinedDamage(heroes, defense);
                 console.log(healthLvl, defense, currentHits);
-                if (health(healthLvl - 1) / calcMaxCombinedDamage(heroes, defense + 1) > currentHits) {
+                if (formulas.health(healthLvl - 1) / calcMaxCombinedDamage(heroes, defense + 1) > currentHits) {
                     healthLvl--;
                     defense++;
-                } else if (health(healthLvl + 1) / calcMaxCombinedDamage(heroes, defense - 1) > currentHits) {
+                } else if (formulas.health(healthLvl + 1) / calcMaxCombinedDamage(heroes, defense - 1) > currentHits) {
                     healthLvl++;
                     defense--;
                 } else {
@@ -94,10 +83,10 @@ module.exports = {
                 }
             }
 
-            enemy = {name: "name", description: "desc", image: "", currentHP: Math.ceil(health(healthLvl)), level: total / 3, health: healthLvl, attack: attack, defense: defense};
+            enemy = {name: "name", description: "desc", image: "", currentHP: Math.ceil(formulas.health(healthLvl)), level: total / 3, health: healthLvl, attack: attack, defense: defense, work: {}};
             message.channel.send(JSON.stringify(enemy));
         } else if (subcommand === 'info') {
-            message.channel.send(`Lv. ${enemy.level} ${enemy.name}: HP ${enemy.currentHP}/${Math.ceil(health(enemy.health))} \\|\\| Stat ${enemy.health}/${enemy.attack}/${enemy.defense}`);
+            message.channel.send(`Lv. ${enemy.level} ${enemy.name}: HP ${enemy.currentHP}/${Math.ceil(formulas.health(enemy.health))} \\|\\| Stat ${enemy.health}/${enemy.attack}/${enemy.defense}`);
         }
 
         fs.writeFile('enemy.json', JSON.stringify(enemy), (err) => {});
