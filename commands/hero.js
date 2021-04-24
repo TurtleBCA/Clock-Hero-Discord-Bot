@@ -25,6 +25,18 @@ module.exports = {
                 let currentExp = hero.totalExp - ((hero.level - 1) * (10 + 10 + hero.level - 2) / 2);
                 message.channel.send(`${hero.name}: HP ${hero.currentHP}/${maxHP} \\|\\| Lv. ${hero.level} ${currentExp}/${20+hero.level-1} \\|\\| Stat ${hero.health}/${hero.attack}/${hero.defense}, Points: ${hero.points}`);
             }
+        } else if (subcommand === 'allocate') {
+            if (args.length != 3) {
+                message.channel.send('syntax is `!hero allocate {health|attack|defense} *amount*`');
+            } else if (parseInt(args[2]) > heroes[message.author.toString()].points) {
+                message.channel.send(`You don't have enough points (you only have ${heroes[message.author.toString()].points})`);
+            } else if (['health', 'attack', 'defense'].includes(args[1])) {
+                message.channel.send(`${args[1]}: ${heroes[message.author.toString()][args[1]]} -> ${heroes[message.author.toString()][args[1]] + parseInt(args[2])}`);
+                heroes[message.author.toString()][args[1]] += parseInt(args[2]);
+                heroes[message.author.toString()].points -= parseInt(args[2]);
+            } else {
+                message.channel.send('Unable to complete your command. Did you misspell something?');
+            }
         }
 
         fs.writeFile('heroes.json', JSON.stringify(heroes), (err) => {});
