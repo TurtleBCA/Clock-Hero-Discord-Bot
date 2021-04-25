@@ -73,7 +73,7 @@ client.on('message', message => {
                 heroes[hero].points += 3;
             }
 
-            const goalMultiplier = formulas.logistic(clock[hero].goal, 0, 2, 1);
+            const goalMultiplier = formulas.logistic((clock[hero].goal - average) / standardDeviation, 0, 2, 1);
             let finalDamage = Math.ceil(10 * completion * formulas.damage(formulas.power(heroes[hero].attack), formulas.power(enemy.defense)) * goalMultiplier);
             enemy.currentHP -= finalDamage;
             if (!(hero in enemy.work)) {

@@ -1,4 +1,6 @@
 const fs = require('fs');
+const formulas = require('../formulas.js');
+const Discord = require('discord.js');
 
 module.exports = {
     name: 'hero',
@@ -19,12 +21,16 @@ module.exports = {
                 clock[message.author.toString()] = {goal: 240, log: 0};
             }
         } else if (subcommand === 'info') {
-            if (args.length) {
-                const hero = heroes[message.author.toString()];
-                const maxHP = Math.ceil(Math.pow(hero.health, Math.log(9981) / Math.log(100)) + 19);
-                let currentExp = hero.totalExp - ((hero.level - 1) * (10 + 10 + hero.level - 2) / 2);
-                message.channel.send(`${hero.name}: HP ${hero.currentHP}/${maxHP} \\|\\| Lv. ${hero.level} ${currentExp}/${20+hero.level-1} \\|\\| Stat ${hero.health}/${hero.attack}/${hero.defense}, Points: ${hero.points}`);
-            }
+            const hero = heroes[message.author.toString()];
+            let currentExp = hero.totalExp - formulas.previousPoints(hero.level);
+            const newEmbed = new Discord.MessageEmbed()
+            .setTitle(`${hero.name}`)
+            .setDescription(`Lv. ${hero.level} ${currentExp}/${10+hero.level-1}`)
+            .addFields(
+                {name: 'Stats', value: `HP ${hero.currentHP}/${Math.ceil(formulas.health(hero.health))} \\|\\| ${hero.health}/${hero.attack}/${hero.defense}, Points: ${hero.points}`},
+                {name: 'Work', value: `${enemy.work[message.author.toString()] || 'No work yet'}`}
+            ).setImage(`${hero.image}`);
+            message.channel.send(newEmbed)
         } else if (subcommand === 'allocate') {
             if (args.length != 3) {
                 message.channel.send('syntax is `!hero allocate {health|attack|defense} *amount*`');

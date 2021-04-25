@@ -45,7 +45,6 @@ module.exports = {
         //     return;
         // }
 
-        console.log(enemy)
         if (subcommand === 'generate') {
             if (args.length != 3) {
                 message.channel.send('syntax is `!enemy generate *heroHits* *bossDays*`')
