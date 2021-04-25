@@ -1,5 +1,6 @@
 const fs = require('fs');
 const formulas = require('../formulas.js');
+const Discord = require('discord.js');
 
 function lowerBound(lo, hi, method) {
     while (lo < hi) {
@@ -44,6 +45,7 @@ module.exports = {
         //     return;
         // }
 
+        console.log(enemy)
         if (subcommand === 'generate') {
             if (args.length != 3) {
                 message.channel.send('syntax is `!enemy generate *heroHits* *bossDays*`')
@@ -86,7 +88,26 @@ module.exports = {
             enemy = {name: "name", description: "desc", image: "", currentHP: Math.ceil(formulas.health(healthLvl)), level: total / 3, health: healthLvl, attack: attack, defense: defense, work: {}};
             message.channel.send(JSON.stringify(enemy));
         } else if (subcommand === 'info') {
-            message.channel.send(`Lv. ${enemy.level} ${enemy.name}: HP ${enemy.currentHP}/${Math.ceil(formulas.health(enemy.health))} \\|\\| Stat ${enemy.health}/${enemy.attack}/${enemy.defense}`);
+            const newEmbed = new Discord.MessageEmbed()
+            .setTitle(`Lv. ${enemy.level} ${enemy.name}`)
+            .setDescription(`${enemy.description}`)
+            .addFields(
+                {name: 'Stats', value: `HP ${enemy.currentHP}/${Math.ceil(formulas.health(enemy.health))} \\|\\| Stat ${enemy.health}/${enemy.attack}/${enemy.defense}`},
+                {name: 'Work', value: `${Object.keys(enemy.work).map(id => `${heroes[id].name}: ${enemy.work[id]}`).join('\n') || 'No work yet'}`}
+            ).setImage(`${enemy.image}`);
+
+            message.channel.send(newEmbed);
+        } else if (subcommand === 'set') {
+            if (args.length < 3) {
+                message.channel.send('syntax is `!enemy set {name|description|image} *stuff*`')
+            } else if (['name', 'description', 'image'].includes(args[1])) {
+                everythingElse = args.slice(2).join(' ');
+                enemy[args[1]] = everythingElse;
+            } else {
+                message.channel.send('syntax is `!enemy set {name|description|image} *stuff*`')
+            }
+        } else {
+            return;
         }
 
         fs.writeFile('enemy.json', JSON.stringify(enemy), (err) => {});
