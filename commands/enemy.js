@@ -45,11 +45,6 @@ module.exports = {
         //     return;
         // }
 
-        if (enemy && Object.keys(enemy).length === 0 && enemy.constructor === Object) {
-            message.channel.send('Enemy does not exist');
-            return;
-        }
-
         if (subcommand === 'generate') {
             if (args.length != 3) {
                 message.channel.send('syntax is `!enemy generate *heroHits* *bossDays*`')
@@ -92,6 +87,10 @@ module.exports = {
             enemy = {name: "name", description: "desc", image: "", currentHP: Math.ceil(formulas.health(healthLvl)), level: total / 3, health: healthLvl, attack: attack, defense: defense, work: {}};
             message.channel.send(JSON.stringify(enemy));
         } else if (subcommand === 'info') {
+            if (enemy && Object.keys(enemy).length === 0 && enemy.constructor === Object) {
+                message.channel.send('Enemy does not exist');
+                return;
+            }
             const newEmbed = new Discord.MessageEmbed()
             .setTitle(`Lv. ${enemy.level} ${enemy.name}`)
             .setDescription(`${enemy.description}`)
@@ -102,6 +101,10 @@ module.exports = {
 
             message.channel.send(newEmbed);
         } else if (subcommand === 'set') {
+            if (enemy && Object.keys(enemy).length === 0 && enemy.constructor === Object) {
+                message.channel.send('Enemy does not exist');
+                return;
+            }
             if (args.length < 3) {
                 message.channel.send('syntax is `!enemy set {name|description|image} *stuff*`')
             } else if (['name', 'description', 'image'].includes(args[1])) {
@@ -111,6 +114,10 @@ module.exports = {
                 message.channel.send('syntax is `!enemy set {name|description|image} *stuff*`')
             }
         } else {
+            if (enemy && Object.keys(enemy).length === 0 && enemy.constructor === Object) {
+                message.channel.send('Enemy does not exist');
+                return;
+            }
             return;
         }
 
