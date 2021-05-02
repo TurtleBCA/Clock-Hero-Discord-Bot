@@ -7,6 +7,8 @@ module.exports = {
     description: 'hero related commands',
     execute(message, args, heroes, clock, enemy) {
         const subcommand = args[0];
+        const enemyExists = !(enemy && Object.keys(enemy).length === 0 && enemy.constructor === Object);
+
         if (subcommand === 'new') {
             if (message.author.toString() in heroes) {
                 message.channel.send('you already have a character');
@@ -28,7 +30,7 @@ module.exports = {
             .setDescription(`Lv. ${hero.level} ${currentExp}/${10+hero.level-1}`)
             .addFields(
                 {name: 'Stats', value: `HP ${hero.currentHP}/${Math.ceil(formulas.health(hero.health))} \\|\\| ${hero.health}/${hero.attack}/${hero.defense}, Points: ${hero.points}`},
-                {name: 'Work', value: `${enemy.work[message.author.toString()] || 'No work yet'}`}
+                {name: 'Work', value: `${(enemyExists ? enemy.work[message.author.toString()] : false) || 'No work yet'}`}
             ).setImage(`${hero.image}`);
             message.channel.send(newEmbed)
         } else if (subcommand === 'allocate') {
@@ -45,7 +47,7 @@ module.exports = {
             }
         }
 
-        fs.writeFile('heroes.json', JSON.stringify(heroes), (err) => {});
-        fs.writeFile('clock.json', JSON.stringify(clock), (err) => {});
+        fs.writeFile('heroes.json', JSON.stringify(heroes), (err) => { if (err) console.log(err);});
+        fs.writeFile('clock.json', JSON.stringify(clock), (err) => { if (err) console.log(err);});
     }
 }

@@ -45,6 +45,11 @@ module.exports = {
         //     return;
         // }
 
+        if (enemy && Object.keys(enemy).length === 0 && enemy.constructor === Object) {
+            message.channel.send('Enemy does not exist');
+            return;
+        }
+
         if (subcommand === 'generate') {
             if (args.length != 3) {
                 message.channel.send('syntax is `!enemy generate *heroHits* *bossDays*`')
@@ -109,6 +114,6 @@ module.exports = {
             return;
         }
 
-        fs.writeFile('enemy.json', JSON.stringify(enemy), (err) => {});
+        fs.writeFile('enemy.json', JSON.stringify(enemy), (err) => { if (err) console.log(err);});
     }
 }

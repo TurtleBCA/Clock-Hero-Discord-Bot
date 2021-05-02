@@ -54,7 +54,7 @@ client.on('message', message => {
         let maxWorkHero = '';
 
         for (const hero in heroes) {
-            let completion = clock[hero].log / clock[hero].goal;
+            let completion = Math.min(1, clock[hero].log / clock[hero].goal);
             heroes[hero].currentHP -= Math.ceil(10 * (1-completion) * formulas.damage(formulas.power(enemy.attack), formulas.power(heroes[hero].defense)));
 
             // hero runs out of HP

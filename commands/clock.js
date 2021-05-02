@@ -39,6 +39,6 @@ module.exports = {
             }
         }
 
-        fs.writeFile('clock.json', JSON.stringify(clock), (err) => {});
+        fs.writeFile('clock.json', JSON.stringify(clock), (err) => { if (err) console.log(err);});
     }
 }

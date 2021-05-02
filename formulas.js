@@ -12,18 +12,14 @@ exports.damage = function damage(attack, defense) {
 
 exports.average = (nums) => {
     let result = 0;
-    for (let num in nums) {
-        result += num;
-    }
+    nums.forEach(num => {result += num});
     return result / nums.length;
 }
 
 exports.standardDeviation = (nums) => {
     let result = 0;
     let average = exports.average(nums);
-    for (let num in nums) {
-        result += (num - average) * (num - average);
-    }
+    nums.forEach(num => {result += (num - average) * (num - average)});
     return Math.sqrt(result / nums.length);
 }
 
